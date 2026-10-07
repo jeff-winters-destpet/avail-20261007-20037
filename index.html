@@ -114,10 +114,17 @@ var ZONES = [
   ["America/New_York", "Eastern (New York)"], ["America/Chicago", "Central (Chicago)"],
   ["America/Denver", "Mountain (Denver)"], ["America/Phoenix", "Arizona (Phoenix)"],
   ["America/Los_Angeles", "Pacific (Los Angeles)"], ["America/Anchorage", "Alaska"],
-  ["Pacific/Honolulu", "Hawaii"], ["UTC", "UTC"], ["Europe/London", "London"],
-  ["Europe/Paris", "Central Europe (Paris)"], ["Asia/Kolkata", "India (Kolkata)"],
-  ["Asia/Singapore", "Singapore"], ["Asia/Tokyo", "Japan (Tokyo)"], ["Australia/Sydney", "Sydney"]
+  ["Pacific/Honolulu", "Hawaii"]
 ];
+// Other US IANA names that devices report, mapped to the listed zone with the same clock.
+var ALIAS = {
+  "America/Detroit": "America/New_York", "America/Indiana/Indianapolis": "America/New_York",
+  "America/Kentucky/Louisville": "America/New_York", "America/Boise": "America/Denver",
+  "America/Menominee": "America/Chicago", "America/Juneau": "America/Anchorage",
+  "US/Eastern": "America/New_York", "US/Central": "America/Chicago", "US/Mountain": "America/Denver",
+  "US/Pacific": "America/Los_Angeles", "US/Arizona": "America/Phoenix", "US/Alaska": "America/Anchorage",
+  "US/Hawaii": "Pacific/Honolulu"
+};
 var WD = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 var MO = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 var zone = SRC;
@@ -228,7 +235,7 @@ function init() {
   try { saved = localStorage.getItem("avail-tz") || ""; } catch (e) {}
   var list = ZONES.slice();
   var known = function (z) { return list.some(function (x) { return x[0] === z; }); };
-  if (detected && !known(detected)) list.unshift([detected, detected.replace(/_/g, " ") + " (your device)"]);
+  if (ALIAS[detected]) detected = ALIAS[detected];
   list.forEach(function (z) { var o = el("option", "", z[1]); o.value = z[0]; sel.appendChild(o); });
   var pick = saved && known(saved) ? saved : (detected && known(detected) ? detected : SRC);
   try { new Intl.DateTimeFormat("en-US", { timeZone: pick }); } catch (e) { pick = SRC; }
