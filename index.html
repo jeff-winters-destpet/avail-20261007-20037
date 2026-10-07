@@ -82,7 +82,7 @@ footer { color: var(--muted); font-size: 13px; border-top: 1px solid var(--line)
 
 <div class="page">
   <header>
-    <h1>Jeff Winters, availability</h1>
+    <h1>Jeff Winters' Availability</h1>
     <p class="sub">Open times over the next two weeks.</p>
     <div class="meta">
       <span>Updated Oct 7, 2026</span>
@@ -195,7 +195,7 @@ function render() {
   order.forEach(function (k) {
     var wk = el("section", "week");
     var mon = new Date(k + "T12:00:00Z");
-    wk.appendChild(el("h2", "", "Week of " + MO[mon.getUTCMonth()] + " " + mon.getUTCDate() + " (Central dates)"));
+    wk.appendChild(el("h2", "", "Week of " + MO[mon.getUTCMonth()] + " " + mon.getUTCDate()));
     var axis = el("div", "axis"); axis.appendChild(ticks(groups[k][0].d)); wk.appendChild(axis);
     var box = el("div", "days");
     groups[k].forEach(function (day) {
