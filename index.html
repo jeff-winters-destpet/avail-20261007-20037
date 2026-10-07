@@ -47,9 +47,9 @@ h1 { font-size: clamp(1.6rem, 4vw, 2.1rem); font-weight: 600; letter-spacing: -0
 h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 600; margin: 0 0 10px; }
 .week { margin-bottom: 32px; }
 .axis, .day { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr); column-gap: 16px; }
-.axis { margin-bottom: 4px; }
+.axis { margin-bottom: 4px; padding-inline: 15px; }
 .ticks { position: relative; height: 16px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
-.ticks span { position: absolute; transform: translateX(-50%); }
+.ticks span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
 .ticks span:first-child { transform: none; }
 .ticks span:last-child { transform: translateX(-100%); }
 .days { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
