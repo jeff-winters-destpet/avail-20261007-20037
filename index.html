@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Jeff Winters Availability</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one row per weekday. A 9-to-5 timeline bar shows busy blocks, with the open windows listed under it. */
+:root {
+  --bg: #f6f8f8;
+  --surface: #ffffff;
+  --fg: #16222a;
+  --muted: #5d6f78;
+  --line: #dbe3e6;
+  --free: #0b7a6b;
+  --free-bg: #e2f3ef;
+  --busy: #c5cfd4;
+  --busy-line: #9aa9b0;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f171b; --surface: #162329; --fg: #e5eef0; --muted: #93a6ae; --line: #26373e;
+    --free: #5fd1bd; --free-bg: #12342f; --busy: #2b3c43; --busy-line: #4d646d;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f171b; --surface: #162329; --fg: #e5eef0; --muted: #93a6ae; --line: #26373e;
+  --free: #5fd1bd; --free-bg: #12342f; --busy: #2b3c43; --busy-line: #4d646d;
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+.page { max-width: 880px; margin: 0 auto; padding-inline: 16px; padding-block: 32px 48px; }
+header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 28px; }
+h1 { font-size: clamp(1.6rem, 4vw, 2.1rem); font-weight: 600; letter-spacing: -0.01em; margin: 0; text-wrap: balance; }
+.sub { color: var(--muted); margin: 0; max-width: 60ch; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 20px; font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); margin-top: 8px; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.sw { width: 18px; height: 10px; border-radius: 2px; display: inline-block; }
+.sw.free { background: var(--free-bg); border: 1px solid var(--free); }
+.sw.busy { background: var(--busy); border: 1px solid var(--busy-line); }
+h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 600; margin: 0 0 10px; }
+.week { margin-bottom: 32px; }
+.axis, .day { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr); column-gap: 16px; }
+.axis { margin-bottom: 4px; }
+.ticks { position: relative; height: 16px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+.ticks span { position: absolute; transform: translateX(-50%); }
+.ticks span:first-child { transform: none; }
+.ticks span:last-child { transform: translateX(-100%); }
+.days { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.day { padding: 12px 14px; border-top: 1px solid var(--line); }
+.day:first-child { border-top: 0; }
+.dlabel { display: flex; flex-direction: column; }
+.dlabel b { font-weight: 600; }
+.dlabel small { color: var(--muted); font-size: 12.5px; }
+.bar { position: relative; height: 22px; border-radius: 4px; background: var(--free-bg); border: 1px solid var(--free); overflow: hidden; }
+.blk { position: absolute; top: 0; bottom: 0; background: var(--busy); border-inline: 1px solid var(--busy-line); }
+.wins { display: flex; flex-wrap: wrap; gap: 6px 8px; margin-top: 8px; font-family: var(--font-mono); font-size: 12.5px; }
+.wins span { color: var(--free); background: var(--free-bg); padding: 1px 8px; border-radius: 3px; }
+.wins .none { color: var(--muted); background: transparent; padding: 0; }
+.axis .ticks { grid-column: 2; }
+footer { color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); padding-top: 16px; max-width: 62ch; }
+@media (max-width: 560px) {
+  .axis { grid-template-columns: 1fr; }
+  .axis .ticks { grid-column: 1; }
+  .day { grid-template-columns: 1fr; row-gap: 8px; }
+  .dlabel { flex-direction: row; gap: 8px; align-items: baseline; }
+}
+</style>
+</head>
+<body>
+
+
+<div class="page">
+  <header>
+    <h1>Jeff Winters, availability</h1>
+    <p class="sub">Open times over the next two weeks. Busy blocks show no meeting details.</p>
+    <div class="meta">
+      <span>Central Time (CT)</span>
+      <span>Weekdays 9:00 AM to 5:00 PM</span>
+      <span>Snapshot taken Oct 7, 2026</span>
+    </div>
+  </header>
+
+  <div class="legend">
+    <span><i class="sw free"></i>Open</span>
+    <span><i class="sw busy"></i>Busy</span>
+  </div>
+
+  <main id="weeks"></main>
+
+  <footer>This is a read-only snapshot and may be out of date. Pick a window you like and send it back to the person who shared this page. Times are not held until confirmed.</footer>
+</div>
+
+<script>
+// Busy blocks per day, in minutes after midnight, Central Time. No titles on purpose.
+var H = function (h, m) { return h * 60 + (m || 0); };
+var DAYS = [
+  { d: "2026-10-07", busy: [[H(10,15), H(11,30)], [H(12,30), H(13)]] },
+  { d: "2026-10-08", busy: [[H(10), H(11,30)], [H(14), H(14,30)]] },
+  { d: "2026-10-09", busy: [[H(10,15), H(10,30)], [H(11), H(11,30)], [H(13), H(14)]] },
+  { d: "2026-10-12", busy: [[H(9,45), H(11,55)], [H(15), H(15,30)]] },
+  { d: "2026-10-13", busy: [[H(10,15), H(10,30)], [H(11), H(11,30)], [H(15), H(16)]] },
+  { d: "2026-10-14", busy: [[H(10,15), H(11,30)], [H(12), H(17)]] },
+  { d: "2026-10-15", busy: [[H(10,15), H(11,30)], [H(13,30), H(14)]] },
+  { d: "2026-10-16", busy: [[H(10,15), H(10,30)], [H(11), H(11,30)], [H(13), H(14)]] },
+  { d: "2026-10-19", busy: [[H(9,45), H(11,55)]] },
+  { d: "2026-10-20", busy: [[H(10,15), H(10,30)], [H(11), H(11,30)], [H(13), H(14)], [H(15), H(16)]] },
+  { d: "2026-10-21", busy: [[H(10,15), H(11,30)]] }
+];
+var START = H(9), END = H(17), MIN_FREE = 30;
+
+function fmt(min) {
+  var h = Math.floor(min / 60), m = min % 60, ap = h >= 12 ? "PM" : "AM";
+  var h12 = h % 12 === 0 ? 12 : h % 12;
+  return h12 + ":" + (m < 10 ? "0" : "") + m + " " + ap;
+}
+function freeWindows(busy) {
+  var out = [], cur = START;
+  busy.slice().sort(function (a, b) { return a[0] - b[0]; }).forEach(function (b) {
+    if (b[0] - cur >= MIN_FREE) out.push([cur, b[0]]);
+    if (b[1] > cur) cur = b[1];
+  });
+  if (END - cur >= MIN_FREE) out.push([cur, END]);
+  return out;
+}
+function el(tag, cls, text) {
+  var e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text) e.textContent = text;
+  return e;
+}
+function ticks() {
+  var t = el("div", "ticks");
+  [9, 11, 13, 15, 17].forEach(function (h) {
+    var s = el("span", "", fmt(H(h)).replace(":00", ""));
+    s.style.left = ((H(h) - START) / (END - START) * 100) + "%";
+    t.appendChild(s);
+  });
+  return t;
+}
+function weekOf(iso) {
+  var d = new Date(iso + "T12:00:00");
+  var mon = new Date(d); mon.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+  return mon.toISOString().slice(0, 10);
+}
+var WD = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+var MO = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+var groups = {}, order = [];
+DAYS.forEach(function (day) {
+  var k = weekOf(day.d);
+  if (!groups[k]) { groups[k] = []; order.push(k); }
+  groups[k].push(day);
+});
+
+var root = document.getElementById("weeks");
+order.forEach(function (k) {
+  var wk = el("section", "week");
+  var mon = new Date(k + "T12:00:00");
+  wk.appendChild(el("h2", "", "Week of " + MO[mon.getMonth()] + " " + mon.getDate()));
+  var axis = el("div", "axis"); axis.appendChild(ticks()); wk.appendChild(axis);
+  var box = el("div", "days");
+  groups[k].forEach(function (day) {
+    var d = new Date(day.d + "T12:00:00");
+    var row = el("div", "day");
+    var lab = el("div", "dlabel");
+    lab.appendChild(el("b", "", WD[d.getDay()]));
+    lab.appendChild(el("small", "", MO[d.getMonth()] + " " + d.getDate()));
+    var right = el("div", "");
+    var bar = el("div", "bar");
+    day.busy.forEach(function (b) {
+      var blk = el("div", "blk");
+      blk.style.left = ((b[0] - START) / (END - START) * 100) + "%";
+      blk.style.width = ((b[1] - b[0]) / (END - START) * 100) + "%";
+      bar.appendChild(blk);
+    });
+    var wins = el("div", "wins");
+    var fw = freeWindows(day.busy);
+    if (!fw.length) wins.appendChild(el("span", "none", "No open time"));
+    fw.forEach(function (w) { wins.appendChild(el("span", "", fmt(w[0]) + " to " + fmt(w[1]))); });
+    right.appendChild(bar); right.appendChild(wins);
+    row.appendChild(lab); row.appendChild(right);
+    box.appendChild(row);
+  });
+  wk.appendChild(box);
+  root.appendChild(wk);
+});
+</script>
+
+</body>
+</html>
