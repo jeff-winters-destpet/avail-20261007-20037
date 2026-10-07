@@ -8,29 +8,31 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
 /* Layout: one row per weekday. A 9-to-5 timeline bar shows busy blocks, with the open windows listed under it. */
+/* Yourgi colors: bone / ink / teal, from the Stage Booking Tool palette. Fonts unchanged. */
 :root {
-  --bg: #f6f8f8;
-  --surface: #ffffff;
-  --fg: #16222a;
-  --muted: #5d6f78;
-  --line: #dbe3e6;
-  --free: #0b7a6b;
-  --free-bg: #e2f3ef;
-  --busy: #c5cfd4;
-  --busy-line: #9aa9b0;
+  --bg: #FAF5EA;
+  --surface: #FFFFFF;
+  --fg: #16140F;
+  --muted: #5B5547;
+  --line: #E4DCC9;
+  --free: #1E9092;
+  --free-ink: #0F6163;
+  --free-bg: #E0F0EF;
+  --busy: #E4DCC9;
+  --busy-line: #C4B896;
   --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0f171b; --surface: #162329; --fg: #e5eef0; --muted: #93a6ae; --line: #26373e;
-    --free: #5fd1bd; --free-bg: #12342f; --busy: #2b3c43; --busy-line: #4d646d;
+    --bg: #16140F; --surface: #211E17; --fg: #FAF5EA; --muted: #B3AA96; --line: #3A352A;
+    --free: #4FC3C5; --free-ink: #7FDADB; --free-bg: #17393A; --busy: #3A352A; --busy-line: #6A614D;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0f171b; --surface: #162329; --fg: #e5eef0; --muted: #93a6ae; --line: #26373e;
-  --free: #5fd1bd; --free-bg: #12342f; --busy: #2b3c43; --busy-line: #4d646d;
+  --bg: #16140F; --surface: #211E17; --fg: #FAF5EA; --muted: #B3AA96; --line: #3A352A;
+  --free: #4FC3C5; --free-ink: #7FDADB; --free-bg: #17393A; --busy: #3A352A; --busy-line: #6A614D;
   color-scheme: dark;
 }
 body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
@@ -61,7 +63,7 @@ h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: v
 .bar { position: relative; height: 22px; border-radius: 4px; background: var(--free-bg); border: 1px solid var(--free); overflow: hidden; }
 .blk { position: absolute; top: 0; bottom: 0; background: var(--busy); border-inline: 1px solid var(--busy-line); }
 .wins { display: flex; flex-wrap: wrap; gap: 6px 8px; margin-top: 8px; font-family: var(--font-mono); font-size: 12.5px; }
-.wins span { color: var(--free); background: var(--free-bg); padding: 1px 8px; border-radius: 3px; }
+.wins span { color: var(--free-ink); background: var(--free-bg); padding: 1px 8px; border-radius: 3px; }
 .wins .none { color: var(--muted); background: transparent; padding: 0; }
 .axis .ticks { grid-column: 2; }
 .tzbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 14px; font-size: 14px; }
